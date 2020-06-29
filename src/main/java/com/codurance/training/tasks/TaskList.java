@@ -15,6 +15,7 @@ public final class TaskList implements Runnable {
     private static final String QUIT = "quit";
 
     private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
+    private final List<Project> projects = new ArrayList<>();
     private final BufferedReader in;
     private final PrintWriter out;
 
@@ -82,12 +83,8 @@ public final class TaskList implements Runnable {
     }
 
     private void show() {
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            out.println(project.getKey());
-            for (Task task : project.getValue()) {
-                out.printf("    %s", task);
-            }
-            out.println();
+        for (Project project: projects) {
+            out.println(project);
         }
     }
 
@@ -110,7 +107,14 @@ public final class TaskList implements Runnable {
     }
 
     private void addProject(String name) {
-        tasks.put(name, new ArrayList<>());
+        if(projects.stream()
+                .anyMatch(project -> project.getSlug().equals(name))) {
+            out.printf("A project with the slug \"%s\" already exists.", name);
+            out.println();
+            return;
+        }
+
+        projects.add(new Project(name));
     }
 
     private void addTask(String project, String description) {
