@@ -1,34 +1,34 @@
 package com.codurance.training.tasks;
 
-public final class Task {
-    private final long id;
-    private final String description;
-    private boolean done;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Task(long id, String description, boolean done) {
-        this.id = id;
-        this.description = description;
-        this.done = done;
+public final class Project {
+    private final String slug;
+    private List<Task> tasks;
+
+    public Project(String slug) {
+        this.slug = slug;
+        this.tasks = new ArrayList<>();
     }
 
-    public long getId() {
-        return id;
+    public String getSlug() {
+        return slug;
     }
 
-    public String getDescription() {
-        return description;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
     public String toString() {
-        return String.format("[%c] %d: %s%n", (isDone() ? 'x' : ' '), getId(), getDescription());
+        StringBuilder stringBuilder = new StringBuilder(this.slug);
+
+        tasks.forEach(task -> stringBuilder.append(String.format("    %s)", task)));
+        return stringBuilder.toString();
     }
 }
