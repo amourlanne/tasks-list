@@ -1,5 +1,7 @@
 package com.codurance.training.tasks;
 
+import com.codurance.training.tasks.exceptions.NotEnoughArgumentException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,32 +44,40 @@ public final class TaskList implements Runnable {
             if (command.equals(QUIT)) {
                 break;
             }
-            execute(command);
+            try {
+                execute(command);
+            } catch (NotEnoughArgumentException e) {
+                out.println(e.getMessage());
+            }
         }
     }
 
-    private void execute(String commandLine) {
+    private void execute(String commandLine) throws NotEnoughArgumentException {
         String[] commandRest = commandLine.split(" ", 2);
-        String command = commandRest[0];
-        switch (command) {
-            case "show":
-                show();
-                break;
-            case "add":
-                add(commandRest[1]);
-                break;
-            case "check":
-                check(commandRest[1]);
-                break;
-            case "uncheck":
-                uncheck(commandRest[1]);
-                break;
-            case "help":
-                help();
-                break;
-            default:
-                error(command);
-                break;
+        try {
+            String command = commandRest[0];
+            switch (command) {
+                case "show":
+                    show();
+                    break;
+                case "add":
+                    add(commandRest[1]);
+                    break;
+                case "check":
+                    check(commandRest[1]);
+                    break;
+                case "uncheck":
+                    uncheck(commandRest[1]);
+                    break;
+                case "help":
+                    help();
+                    break;
+                default:
+                    error(command);
+                    break;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new NotEnoughArgumentException();
         }
     }
 
