@@ -73,7 +73,7 @@ public final class TaskList implements Runnable {
                     help();
                     break;
                 default:
-                    error(command);
+                    commandError(command);
                     break;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -85,32 +85,32 @@ public final class TaskList implements Runnable {
         for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
             out.println(project.getKey());
             for (Task task : project.getValue()) {
-                out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
+                out.printf("    %s", task);
             }
             out.println();
         }
     }
 
     private void add(String commandLine) {
-        String[] subcommandRest = commandLine.split(" ", 2);
-        String subcommand = subcommandRest[0];
+        String[] subCommandRest = commandLine.split(" ", 2);
+        String subCommand = subCommandRest[0];
 
-        switch (subcommand) {
+        switch (subCommand) {
             case "project":
-                addProject(subcommandRest[1]);
+                addProject(subCommandRest[1]);
                 break;
             case "task":
-                String[] projectTask = subcommandRest[1].split(" ", 2);
+                String[] projectTask = subCommandRest[1].split(" ", 2);
                 addTask(projectTask[0], projectTask[1]);
                 break;
             default:
-                error(commandLine);
+                commandError(commandLine);
                 break;
         }
     }
 
     private void addProject(String name) {
-        tasks.put(name, new ArrayList<Task>());
+        tasks.put(name, new ArrayList<>());
     }
 
     private void addTask(String project, String description) {
@@ -155,7 +155,7 @@ public final class TaskList implements Runnable {
         out.println();
     }
 
-    private void error(String command) {
+    private void commandError(String command) {
         out.printf("I don't know what the command \"%s\" is.", command);
         out.println();
     }
