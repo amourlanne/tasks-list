@@ -49,19 +49,18 @@ public final class TaskList implements Runnable {
     private void execute(String commandLine) {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
-        String args = commandRest[1];
         switch (command) {
             case "show":
                 show();
                 break;
             case "add":
-                add(args);
+                add(commandRest[1]);
                 break;
             case "check":
-                check(args);
+                check(commandRest[1]);
                 break;
             case "uncheck":
-                uncheck(args);
+                uncheck(commandRest[1]);
                 break;
             case "help":
                 help();

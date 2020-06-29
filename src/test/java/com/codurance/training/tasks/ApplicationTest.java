@@ -99,6 +99,17 @@ public final class ApplicationTest {
         execute("quit");
     }
 
+    @Test(timeout = 1000) public void
+    not_enough_arguments() throws IOException {
+        execute("show");
+
+        execute("add project");
+
+        read("Not enough arguments.");
+
+        execute("quit");
+    }
+
     private void execute(String command) throws IOException {
         read(PROMPT);
         write(command);
