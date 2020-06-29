@@ -106,6 +106,7 @@ public final class ApplicationTest {
 //        execute("show");
 //
 //        execute("add project");
+//        read(NotEnoughArgumentException.ERROR_MESSAGE);
 //
 //        execute("quit");
 //    }
