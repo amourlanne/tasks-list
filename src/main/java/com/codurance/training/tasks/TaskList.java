@@ -6,15 +6,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class TaskList implements Runnable {
     private static final String QUIT = "quit";
 
-    private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
     private final List<Project> projects = new ArrayList<>();
     private final BufferedReader in;
     private final PrintWriter out;
@@ -83,6 +79,7 @@ public final class TaskList implements Runnable {
     }
 
     private void show() {
+
         for (Project project: projects) {
             out.println(project);
         }
@@ -107,8 +104,9 @@ public final class TaskList implements Runnable {
     }
 
     private void addProject(String name) {
+
         if(projects.stream()
-                .anyMatch(project -> project.getSlug().equals(name))) {
+                .anyMatch(streamedProject -> streamedProject.getName().equals(name))) {
             out.printf("A project with the slug \"%s\" already exists.", name);
             out.println();
             return;
@@ -117,14 +115,19 @@ public final class TaskList implements Runnable {
         projects.add(new Project(name));
     }
 
-    private void addTask(String project, String description) {
-        List<Task> projectTasks = tasks.get(project);
-        if (projectTasks == null) {
-            out.printf("Could not find a project with the name \"%s\".", project);
+    private void addTask(String projectName, String description) {
+
+        Optional<Project> project = projects.stream()
+                .filter(streamedProject -> streamedProject.getName().equals(projectName))
+                .findFirst();
+
+        if (!project.isPresent()) {
+            out.printf("Could not find a project with the name \"%s\".", projectName);
             out.println();
             return;
         }
-        projectTasks.add(new Task(nextId(), description, false));
+
+        project.get().addTask(new Task(nextId(), description, false));
     }
 
     private void check(String idString) {
@@ -137,14 +140,16 @@ public final class TaskList implements Runnable {
 
     private void setDone(String idString, boolean done) {
         int id = Integer.parseInt(idString);
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            for (Task task : project.getValue()) {
+
+        for (Project project: projects) {
+            for (Task task: project.getTasks()) {
                 if (task.getId() == id) {
                     task.setDone(done);
                     return;
                 }
             }
         }
+
         out.printf("Could not find a task with an ID of %d.", id);
         out.println();
     }

@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Project {
-    private final String slug;
+    private final String name;
     private List<Task> tasks;
 
-    public Project(String slug) {
-        this.slug = slug;
+    public Project(String name) {
+        this.name = name;
         this.tasks = new ArrayList<>();
     }
 
-    public String getSlug() {
-        return slug;
+    public String getName() {
+        return name;
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
     }
 
     public List<Task> getTasks() {
@@ -26,9 +30,9 @@ public final class Project {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(this.slug);
+        StringBuilder stringBuilder = new StringBuilder(String.format("%s%n", this.name));
 
-        tasks.forEach(task -> stringBuilder.append(String.format("    %s)", task)));
+        tasks.forEach(task -> stringBuilder.append(String.format("    %s", task)));
         return stringBuilder.toString();
     }
 }
