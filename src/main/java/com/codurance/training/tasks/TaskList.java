@@ -127,7 +127,8 @@ public final class TaskList implements Runnable {
             return;
         }
 
-        project.get().addTask(new Task(nextId(), description, false));
+        project.get()
+                .addTask(new Task(nextId(), description, false));
     }
 
     private void check(String idString) {
